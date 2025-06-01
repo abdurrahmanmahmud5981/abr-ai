@@ -1,6 +1,7 @@
 import HeroSection from "@/components/hero";
 import { Card, CardContent } from "@/components/ui/card";
 import { features } from "@/data/features";
+import { howItWorks } from "@/data/howItWorks";
 
 export default function Home() {
   return (
@@ -31,7 +32,7 @@ export default function Home() {
       {/* statistics */}
       <section className="w-full py-12  md:py-24 bg-muted/50">
         <div className="container mx-auto px-4 md:px-6">
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {/* Map through statistics data and display cards */}
             <div className="flex flex-col items-center justify-center space-y-2">
@@ -64,18 +65,16 @@ export default function Home() {
               Our process is designed to be simple and effective, guiding you every step of the way.
             </p>
           </div>
-           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {
-              features.map((feature, index) => (
-                <Card key={index} className="border-2 hover:border-primary transition-colors duration-300 ease-in-out">
-                  <CardContent className="flex flex-col items-center text-center pt-6">
-                    <div className="flex flex-col items-center justify-center ">
-                      <feature.icon className="feature-icon h-10 w-10" />
-                      <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                      <p className="text-muted-foreground">{feature.description}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+              howItWorks.map((item, index) => (
+                <div key={index} className="flex flex-col items-center text-center pt-6" >
+                  <div className=" h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
+                    <item.icon />
+                  </div>
+                  <h3 className="text-xl font-semibold mt-4">{item.title}</h3>
+                  <p className="text-muted-foreground mt-2">{item.description}</p>
+                </div>
               ))
             }
           </div>
