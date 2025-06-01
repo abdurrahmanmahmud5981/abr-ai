@@ -1,7 +1,8 @@
+import { SignUp } from "@clerk/nextjs"
 
 const SignUpPage: React.FC = () => {
   return (
-    <div>SignUpPage</div>
+    <SignUp/>
   )
 }
 

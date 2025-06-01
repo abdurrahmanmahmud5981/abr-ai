@@ -66,7 +66,7 @@ const Header = () => {
             />
           </SignedIn>
           <SignedOut>
-            <SignInButton mode="modal">
+            <SignInButton >
               <Button variant={"outline"}>Sign In</Button>
             </SignInButton>
           </SignedOut>
