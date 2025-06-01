@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
+import HeroSection from "@/components/hero";
 
 export default function Home() {
   return (
-    <div className="">
-      <h1>hi from abr ai </h1>
-      <Button>Hello</Button>
+    <div >
+      <div className="grid-background"></div>
+      <HeroSection />
     </div>
   );
 }
