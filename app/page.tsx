@@ -1,11 +1,14 @@
 import HeroSection from "@/components/hero";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { faqs } from "@/data/faqs";
 import { features } from "@/data/features";
 import { howItWorks } from "@/data/howItWorks";
 import { testimonial } from "@/data/testimonial";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -154,6 +157,21 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* Call to Action */}
+      <section className="w-full py-12 md:py-24 lg:py-32  ">
+        <div className="container mx-auto px-4 md:px-6 text-center border-2 border-muted/50 p-12 rounded-lg bg-muted/40">
+          <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
+          <p className="text-muted-foreground mb-8">
+            Join us today and take the first step towards achieving your goals.
+          </p>
+          <Link href="/auth/sign-in">
+            <Button variant={"outline"} className="h-11 mt-5 animate-bounce">
+              Start Your Journey Today <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </section>
+
     </div>
   );
 }
