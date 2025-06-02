@@ -1,5 +1,7 @@
 import HeroSection from "@/components/hero";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent } from "@/components/ui/card";
+import { faqs } from "@/data/faqs";
 import { features } from "@/data/features";
 import { howItWorks } from "@/data/howItWorks";
 import { testimonial } from "@/data/testimonial";
@@ -120,6 +122,35 @@ export default function Home() {
                 </Card>
               ))
             }
+          </div>
+        </div>
+      </section>
+      {/* FAQ */}
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-background">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h2 className="text-3xl font-bold mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-muted-foreground">
+              Find answers to the most common questions about our service.
+            </p>
+          </div>
+          <div className="max-w-6xl mx-auto">
+            <Accordion type="single" collapsible>
+              {
+                faqs.map((faq, index) => (
+                  <AccordionItem value={faq.question} key={index} className="border-b border-muted/40">
+                    <AccordionTrigger>
+                      <h3 className="text-xl font-semibold">{faq.question}</h3>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <p className="text-muted-foreground mt-2">{faq.answer}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))
+              }
+            </Accordion>
           </div>
         </div>
       </section>
