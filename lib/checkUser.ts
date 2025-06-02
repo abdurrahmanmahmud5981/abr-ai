@@ -4,7 +4,7 @@ import { db } from "./prisma";
 export const checkUser = async () => {
     const user = await currentUser();
     if (!user) {
-        throw new Error("User not authenticated");
+        return null;
     }
     try {
         const loggedInUser = await db.user.findUnique({ where: { clerkUserId: user.id } });
@@ -21,6 +21,7 @@ export const checkUser = async () => {
                 email: user.emailAddresses[0]?.emailAddress,
             },
         });
+        console.log("New user created:", newUser);
         return newUser;
 
     } catch (error) {
