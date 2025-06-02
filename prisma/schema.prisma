@@ -104,3 +104,4 @@ enum MarketOutlook {
   NEUTRAL
   NEGATIVE
 }
+
