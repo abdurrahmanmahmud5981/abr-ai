@@ -1,13 +1,8 @@
 import React from 'react'
 
-interface CoverLetterPageProps {
-  params: {
-    id: string;
-  };
-}
 
-const CoverLetterPage = async ({ params }: CoverLetterPageProps) => {
-  const id = params?.id;
+const CoverLetterPage = async ({ params } ) => {
+  const {id} = await params
   return (
     <div>CoverLetterPage {id}</div>
   )
