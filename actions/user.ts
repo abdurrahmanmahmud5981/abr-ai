@@ -71,3 +71,33 @@ export async function updateUser(data){
         throw new Error("Failed to update user");
     }
 }
+
+export async function getUserOnboardingStatus(){
+    const {userId} = await auth();
+    if(!userId) throw new Error("User not authenticated");
+    const user  =  await  db.user.findUnique({
+        where:{
+            clerkUserId: userId,
+        }
+    })
+
+    if(!user) throw new Error("User not found");
+    
+    try {
+        const user = await db.user.findUnique({
+            where:{
+                clerkUserId: userId
+            },
+            select:{
+                industry: true,
+            }
+        })
+        return{
+            isOnboarded: !!(user && user.industry), // true if industry is set, false otherwise
+        }
+
+    } catch (error) {
+        console.error("Error fetching user onboarding status:", error);
+        throw new Error("Failed to fetch user onboarding status");
+    }
+}
