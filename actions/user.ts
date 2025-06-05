@@ -5,15 +5,15 @@ import { auth } from "@clerk/nextjs/server";
 
 
 
-export async function updateUser(data){
-    const {userId} = await auth();
+export async function updateUser(data) {
+    const { userId } = await auth();
     if (!userId) {
         throw new Error("User not authenticated");
     }
 
     // check if the user exists in the database
     const user = await db.user.findUnique({
-        where:{
+        where: {
             clerkUserId: userId
         }
     })
@@ -23,20 +23,20 @@ export async function updateUser(data){
 
     // update the user in the database
     try {
-        const result = await db.$transaction(async(tx)=>{
+        const result = await db.$transaction(async (tx) => {
             // find if the industry exists
             let industryInsight = await tx.industryInsight.findUnique({
-                where:{
-                    industry:data.industry
+                where: {
+                    industry: data.industry
                 }
             })
 
             // if not than create it with the defalut values - will replace it with ai later
-            if(!industryInsight){
+            if (!industryInsight) {
                 industryInsight = await tx.industryInsight.create({
-                    data:{
+                    data: {
                         industry: data.industry,
-                        salaryRange:[],
+                        salaryRange: [],
                         growthRate: 0,
                         demandLevel: "MEDIUM",
                         topSkills: [],
@@ -54,15 +54,15 @@ export async function updateUser(data){
                     id: user.id
                 },
                 data: {
-                    industry: data.industry ,// add other fields to update as needed
+                    industry: data.industry,// add other fields to update as needed
                     experience: data.experience,
                     bio: data.bio,
                     skills: data.skills,
 
                 }
             })
-            return {updatedUser, industryInsight};
-        },{
+            return { updatedUser, industryInsight };
+        }, {
             timeout: 10000 // 10 seconds timeout
         })
         return result.user;
@@ -72,27 +72,27 @@ export async function updateUser(data){
     }
 }
 
-export async function getUserOnboardingStatus(){
-    const {userId} = await auth();
-    if(!userId) throw new Error("User not authenticated");
-    const user  =  await  db.user.findUnique({
-        where:{
+export async function getUserOnboardingStatus() {
+    const { userId } = await auth();
+    if (!userId) throw new Error("User not authenticated");
+    const user = await db.user.findUnique({
+        where: {
             clerkUserId: userId,
         }
     })
 
-    if(!user) throw new Error("User not found");
-    
+    if (!user) throw new Error("User not found");
+
     try {
         const user = await db.user.findUnique({
-            where:{
+            where: {
                 clerkUserId: userId
             },
-            select:{
+            select: {
                 industry: true,
             }
         })
-        return{
+        return {
             isOnboarded: !!(user && user.industry), // true if industry is set, false otherwise
         }
 
