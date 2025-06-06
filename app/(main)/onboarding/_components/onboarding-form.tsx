@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 interface Industry {
   id: string | number;
   name: string;
@@ -10,6 +11,9 @@ interface OnboardingFormProps {
 }
 
 const OnboardingForm: React.FC<OnboardingFormProps> = ({ industries }) => {
+  
+  
+  
   return (
     <div>
       <h2>Onboarding Form</h2>
