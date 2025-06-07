@@ -21,7 +21,9 @@ const OnboardingForm: React.FC = ({ industries }) => {
   } = useForm({
     resolver: zodResolver(onboardingSchema)
   })
-console.log("industries", industries.filter(industry => industry.name  === selectedIndustry)?.[0]?.subIndustries || [])
+
+  const watchIndustry = watch("industry");
+  console.log("Selected watch Industry:", watch("subIndustry"));
   return (
     <div className='flex items-center justify-center bg-background'>
       <Card className="w-full max-w-lg mt10 mx-2">
@@ -34,10 +36,15 @@ console.log("industries", industries.filter(industry => industry.name  === selec
             <div className="space-y-4">
               <Label htmlFor="industry" className="block mb-2">Industry</Label>
               <Select
-                onValueChange={(value) => {
-                  setValue('industry', value);
-                  setSelectedIndustry(industries.find(industry => industry.id === value)?.name || null);
-                  setValue('subIndustry', ''); // Reset sub-industry when industry changes
+               onValueChange={(value) => {
+                  // Reset sub-industry when industry changes
+                  console.log("Selected Industry Value:", value);
+                  console.log("Selected Industry Object:", industries.find((ind) => ind.id === value));
+                  setValue("industry", value);
+                  setSelectedIndustry(
+                    industries.find((ind) => ind.id === value)
+                  );
+                  setValue("subIndustry", "");
                 }}
               >
                 <SelectTrigger id="industry">
@@ -53,7 +60,9 @@ console.log("industries", industries.filter(industry => industry.name  === selec
                 )
               }
             </div>
-            <div className="space-y-4 mt-4">
+          {
+            watchIndustry && (
+                <div className="space-y-4 mt-4">
               <Label htmlFor="subIndustry" className="block mb-2">Sub Industry</Label>
               <Select
                 onValueChange={(value) => {
@@ -64,7 +73,7 @@ console.log("industries", industries.filter(industry => industry.name  === selec
                   <SelectValue placeholder="Select Sub Industry" />
                 </SelectTrigger>
                 <SelectContent>
-                  { industries.filter(industry => industry.name  === selectedIndustry)?.[0]?.subIndustries.map(ind => (
+                  {selectedIndustry?.subIndustries.map(ind => (
                     <SelectItem key={ind} value={ind}>{ind}</SelectItem>
                   ))}
                 </SelectContent>
@@ -75,6 +84,10 @@ console.log("industries", industries.filter(industry => industry.name  === selec
                 )
               }
             </div>
+            )
+          }
+            
+         
           </form>
         </CardContent>
       </Card>
