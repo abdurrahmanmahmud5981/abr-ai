@@ -53,7 +53,28 @@ console.log("industries", industries.filter(industry => industry.name  === selec
                 )
               }
             </div>
-           
+            <div className="space-y-4 mt-4">
+              <Label htmlFor="subIndustry" className="block mb-2">Sub Industry</Label>
+              <Select
+                onValueChange={(value) => {
+                  setValue('subIndustry', value);
+                }}
+              >
+                <SelectTrigger id="subIndustry">
+                  <SelectValue placeholder="Select Sub Industry" />
+                </SelectTrigger>
+                <SelectContent>
+                  { industries.filter(industry => industry.name  === selectedIndustry)?.[0]?.subIndustries.map(ind => (
+                    <SelectItem key={ind} value={ind}>{ind}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {
+                errors.subIndustry && (
+                  <p className="text-red-500 text-sm">{errors.subIndustry.message}</p>
+                )
+              }
+            </div>
           </form>
         </CardContent>
       </Card>
