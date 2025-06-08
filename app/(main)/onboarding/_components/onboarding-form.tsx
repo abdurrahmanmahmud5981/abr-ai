@@ -21,7 +21,14 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-const OnboardingForm: React.FC = ({ industries }: { industries: string[] }) => {
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+
+const OnboardingForm: React.FC = ({
+  industries,
+}: {
+  industries: string | number[];
+}) => {
   const [selectedIndustry, setSelectedIndustry] = React.useState(null);
 
   const router = useRouter();
@@ -34,14 +41,11 @@ const OnboardingForm: React.FC = ({ industries }: { industries: string[] }) => {
   } = useForm({
     resolver: zodResolver(onboardingSchema),
   });
-  const onSubmit = async (values) => {
-    console.log(values);
-  };
 
   const watchIndustry = watch("industry");
   console.log("Selected watch Industry:", watch("subIndustry"));
-  const submitForm = async () => {
-    console.log("Form submitted");
+  const submitForm = async (values) => {
+    console.log("Form submitted", values);
   };
   return (
     <div className="flex items-center justify-center bg-background">
@@ -143,7 +147,7 @@ const OnboardingForm: React.FC = ({ industries }: { industries: string[] }) => {
               )}
             </div>
 
-         {/* skills */}
+            {/* skills */}
             <div className="space-y-4 mt-4">
               <Label htmlFor="skills" className="block mb-2">
                 Skills
@@ -161,7 +165,24 @@ const OnboardingForm: React.FC = ({ industries }: { industries: string[] }) => {
               )}
             </div>
 
-            {/*  */}
+            {/* professional Bio */}
+            <div className="space-y-4 mt-4">
+              <Label htmlFor="bio" className="block mb-2">
+                Professional Bio
+              </Label>
+              <Textarea
+                id="bio"
+                placeholder="Tell us about your professional background ..."
+                {...register("bio")}
+                className="resize-none min-h-[80px] max-h-[200px]"
+              />
+              {errors.bio && (
+                <p className="text-red-500 text-sm">{errors.bio.message}</p>
+              )}
+            </div>
+            <Button type="submit" className="mt-4 w-full">
+              Complete Profile
+            </Button>
           </form>
         </CardContent>
       </Card>
