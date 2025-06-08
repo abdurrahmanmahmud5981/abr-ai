@@ -143,7 +143,23 @@ const OnboardingForm: React.FC = ({ industries }: { industries: string[] }) => {
               )}
             </div>
 
-        
+         {/* skills */}
+            <div className="space-y-4 mt-4">
+              <Label htmlFor="skills" className="block mb-2">
+                Skills
+              </Label>
+              <Input
+                id="skills"
+                placeholder="e.g, React, Node.js, Python, etc."
+                {...register("skills")}
+              />
+              <p className="text-gray-500 text-sm">
+                Separate skills with commas.
+              </p>
+              {errors.skills && (
+                <p className="text-red-500 text-sm">{errors.skills.message}</p>
+              )}
+            </div>
 
             {/*  */}
           </form>
