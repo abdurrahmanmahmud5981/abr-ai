@@ -1,7 +1,9 @@
-import { LineChart, TrendingDown, TrendingUpIcon } from 'lucide-react';
+import { LineChart, TrendingDown, TrendingUp, TrendingUpIcon } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import React from 'react'
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 
 const DashboardView = ({ insights }) => {
     const salaryData = insights.salaryRange.map((item) => ({
@@ -51,10 +53,49 @@ const DashboardView = ({ insights }) => {
     const lastUpdatedDate = format(new Date(insights.lastUpdated), 'MMMM dd, yyyy');
     const nextUpdateDate = formatDistanceToNow(new Date(insights.nextUpdate), {addSuffix:true});
     console.log('lastUpdatedDate', nextUpdateDate)
+
+   
   return (
-    <div>
-      <div className="">
+    <div className=" space-y-6">
+      <div className=" flex items-center justify-between ">
         <Badge variant="outline"> Last Updated: {lastUpdatedDate}</Badge>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Market Outlook */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className='text-sm font-medium'>Market Outlook</CardTitle>
+                <OutlookIcon className={`h-4 w-4 ${outlookColor}`} />
+              
+            </CardHeader>
+            <CardContent>
+              <div className="">
+                <p className={`text-2xl font-semibold`}>
+                  {insights.marketOutlook}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Next Update: {nextUpdateDate}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        {/* Industry Growth */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className='text-sm font-medium'>Industry Growth</CardTitle>
+            <TrendingUp className="h-4 w-4" />
+          </CardHeader>
+          <CardContent>
+           <div className="">
+                <p className={`text-2xl font-semibold`}>
+                  {insights.growthRate.toFixed(2)}%
+                </p>
+                <Progress value={insights.growthRate} max={100} className="mt-2" />
+              </div>
+          </CardContent>
+        </Card>
+        {/* Demand Level */}
+         
       </div>
     </div>
   )
