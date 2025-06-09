@@ -44,6 +44,9 @@ export async function getIndustryInsights() {
     const user = await db.user.findUnique({
         where: {
             clerkUserId: userId,
+        },
+        include: {
+            industryInsight: true, // Include the related industry insight
         }
     })
 
