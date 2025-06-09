@@ -1,4 +1,5 @@
 import { LineChart, TrendingDown, TrendingUpIcon } from 'lucide-react';
+import { format } from 'date-fns';
 import React from 'react'
 
 const DashboardView = ({ insights }) => {
@@ -36,6 +37,18 @@ const DashboardView = ({ insights }) => {
         }
     }
 
+    const OutlookIcon = getMarketOutLookInfo(insights.marketOutlook).icon;
+    const outlookColor = getMarketOutLookInfo(insights.marketOutlook).color;
+   
+    // const lastUpdatedDate = new Date(insights.lastUpdated);
+    // const formattedDate = lastUpdatedDate.toLocaleDateString('en-US', {
+    //     year: 'numeric',
+    //     month: 'long',
+    //     day: 'numeric',
+    // });
+    
+    const lastUpdatedDate = format(new Date(insights.lastUpdated), 'MMMM dd, yyyy');
+    console.log('lastUpdatedDate', lastUpdatedDate)
   return (
     <div>
       <h1>Industry Insights</h1>
