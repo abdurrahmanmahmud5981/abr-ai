@@ -8,13 +8,13 @@ if (!geminiApiKey) {
   throw new Error("GEMINI_API_KEY environment variable is not set");
 }
 const genAI = new GoogleGenerativeAI(geminiApiKey);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export async function generateAIInsight(industry) {
       const prompt = `
           Analyze the current state of the ${industry} industry and provide insights in ONLY the following JSON format without any additional notes or explanations:
           {
-            "salaryRanges": [
+            "salaryRange": [
               { "role": "string", "min": number, "max": number, "median": number, "location": "string" }
             ],
             "growthRate": number,
