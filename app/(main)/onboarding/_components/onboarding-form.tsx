@@ -2,6 +2,7 @@
 
 import { onboardingSchema } from "@/lib/schema";
 import React from "react";
+import {useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -23,6 +24,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import useFetch from "@/hooks/use-fetch";
+import { updateUser } from "@/actions/user";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const OnboardingForm: React.FC = ({
   industries,
@@ -32,6 +37,13 @@ const OnboardingForm: React.FC = ({
   const [selectedIndustry, setSelectedIndustry] = React.useState(null);
 
   const router = useRouter();
+
+  const {
+    loading: updateLoading,
+    fn: updateUserFn,
+    data: updateResult
+
+  } = useFetch(updateUser);
   const {
     register,
     handleSubmit,
@@ -43,10 +55,29 @@ const OnboardingForm: React.FC = ({
   });
 
   const watchIndustry = watch("industry");
-  console.log("Selected watch Industry:", watch("subIndustry"));
+
   const submitForm = async (values) => {
     console.log("Form submitted", values);
+    try {
+      const formattedIndustry = `${values.industry}-${values.subIndustry.toLowerCase().replace(/ /g, "-")}`
+      await updateUserFn({
+        ...values,
+        industry: formattedIndustry
+      })
+    } catch (err) {
+      console.error("Error onboarding user:", err);
+      return;
+    }
   };
+  useEffect(() => {
+    if (updateResult && !updateLoading) {
+      toast.success("Profile updated successfully!");
+      router.push("/dashboard");
+      router.refresh();
+    }
+  }, [updateResult, updateLoading, router]);
+
+  console.log("Update result:", updateResult);
   return (
     <div className="flex items-center justify-center bg-background">
       <Card className="w-full max-w-lg mt10 mx-2">
@@ -67,12 +98,7 @@ const OnboardingForm: React.FC = ({
               </Label>
               <Select
                 onValueChange={(value) => {
-                  // Reset sub-industry when industry changes
-                  console.log("Selected Industry Value:", value);
-                  console.log(
-                    "Selected Industry Object:",
-                    industries.find((ind) => ind.id === value),
-                  );
+
                   setValue("industry", value);
                   setSelectedIndustry(
                     industries.find((ind) => ind.id === value),
@@ -180,8 +206,11 @@ const OnboardingForm: React.FC = ({
                 <p className="text-red-500 text-sm">{errors.bio.message}</p>
               )}
             </div>
-            <Button type="submit" className="mt-4 w-full">
-              Complete Profile
+            <Button type="submit" className="mt-4 w-full" disabled={updateLoading}>
+              {updateLoading ? <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Updating...
+              </> : "Complete Profile"}
             </Button>
           </form>
         </CardContent>

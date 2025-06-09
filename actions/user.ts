@@ -65,7 +65,7 @@ export async function updateUser(data) {
         }, {
             timeout: 10000 // 10 seconds timeout
         })
-        return result.user;
+        return {success: true, ...result };
     } catch (error) {
         console.error("Error updating user:", error);
         throw new Error("Failed to update user");
