@@ -1,6 +1,7 @@
 import { LineChart, TrendingDown, TrendingUpIcon } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import React from 'react'
+import { Badge } from '@/components/ui/badge';
 
 const DashboardView = ({ insights }) => {
     const salaryData = insights.salaryRange.map((item) => ({
@@ -48,11 +49,13 @@ const DashboardView = ({ insights }) => {
     // });
     
     const lastUpdatedDate = format(new Date(insights.lastUpdated), 'MMMM dd, yyyy');
-    console.log('lastUpdatedDate', lastUpdatedDate)
+    const nextUpdateDate = formatDistanceToNow(new Date(insights.nextUpdate), {addSuffix:true});
+    console.log('lastUpdatedDate', nextUpdateDate)
   return (
     <div>
-      <h1>Industry Insights</h1>
-      <pre>{JSON.stringify(insights, null, 2)}</pre>
+      <div className="">
+        <Badge variant="outline"> Last Updated: {lastUpdatedDate}</Badge>
+      </div>
     </div>
   )
 }
