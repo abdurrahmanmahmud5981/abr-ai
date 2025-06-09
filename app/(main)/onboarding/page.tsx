@@ -8,9 +8,9 @@ const OnboardingPage = async () => {
   //check if user is onboarded
   const { isOnboarded } = await getUserOnboardingStatus()
 
-  // if(isOnboarded){
-  //   redirect('/dashboard')
-  // }
+  if(isOnboarded){
+    redirect('/dashboard')
+  }
   return (
     <div>
       <OnboardingForm industries={industries} />
