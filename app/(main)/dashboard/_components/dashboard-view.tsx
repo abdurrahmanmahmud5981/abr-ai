@@ -1,4 +1,4 @@
-import { BriefcaseIcon, LineChart, TrendingDown, TrendingUp, TrendingUpIcon } from 'lucide-react';
+import { Brain, BriefcaseIcon, LineChart, TrendingDown, TrendingUp, TrendingUpIcon } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import React from 'react'
 import { Badge } from '@/components/ui/badge';
@@ -107,6 +107,20 @@ const DashboardView = ({ insights }) => {
                 insights.demandLevel
               )}`}
             />
+          </CardContent>
+        </Card>
+        {/* top skills */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className='text-sm font-medium'>Top Skills</CardTitle>
+            <Brain className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {insights.topSkills.map((skill: string) => (
+                <Badge variant="secondary" key={skill}>{skill}</Badge>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
