@@ -1,13 +1,14 @@
+"use client";
 import { Brain, BriefcaseIcon, LineChart, TrendingDown, TrendingUp, TrendingUpIcon } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import React from 'react'
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis, } from 'recharts';
 const DashboardView = ({ insights }) => {
   const salaryData = insights.salaryRange.map((item) => ({
-    role: item.role,
+    name: item.role,
     min: item.min / 1000, // Convert to thousands
     max: item.max / 1000, // Convert to thousands
     median: item.median / 1000, // Convert to thousands
@@ -95,14 +96,14 @@ const DashboardView = ({ insights }) => {
           </CardContent>
         </Card>
         {/* Demand Level */}
-         <Card>
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Demand Level</CardTitle>
             <BriefcaseIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{insights.demandLevel}</div>
-             <div
+            <div
               className={`h-2 w-full rounded-full mt-2 ${getDemandLevelColor(
                 insights.demandLevel
               )}`}
@@ -124,6 +125,46 @@ const DashboardView = ({ insights }) => {
           </CardContent>
         </Card>
       </div>
+      {/* salary range */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Salary Ranges by Role</CardTitle>
+          <CardDescription>
+            The salary ranges are based on the latest industry data and may vary by location and experience.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[400px]">
+           <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={salaryData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="bg-background border rounded-lg p-2 shadow-md">
+                          <p className="font-medium">{label}</p>
+                          {payload.map((item) => (
+                            <p key={item.name} className="text-sm">
+                              {item.name}: ${item.value}K
+                            </p>
+                          ))}
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+                <Bar dataKey="min" fill="#94a3b8" name="Min Salary (K)" />
+                <Bar dataKey="median" fill="#64748b" name="Median Salary (K)" />
+                <Bar dataKey="max" fill="#475569" name="Max Salary (K)" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
