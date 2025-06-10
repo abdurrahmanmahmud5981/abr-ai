@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, } from 'recharts';
 interface SalaryRangeItem {
-  name: string;
+  role: string;
   min: number;
   max: number;
   median: number;
@@ -26,13 +26,13 @@ interface Insights {
 }
 
 const DashboardView = ({ insights }: { insights: Insights }) => {
-  const salaryData = insights.salaryRange.map((item: { name: string; min: number; max: number; median: number; }) => ({
-    name: item.name,
+
+  const salaryData = insights.salaryRange.map((item: SalaryRangeItem) => ({
+    name: item.role,
     min: item.min / 1000, // Convert to thousands
     max: item.max / 1000, // Convert to thousands
     median: item.median / 1000, // Convert to thousands
   }));
-  console.log('salaryData', salaryData)
 
   const getDemandLevelColor = (level: string) => {
     switch (level.toLowerCase()) {
@@ -154,7 +154,7 @@ const DashboardView = ({ insights }: { insights: Insights }) => {
         </CardHeader>
         <CardContent>
           <div className="h-[400px]">
-           <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={salaryData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
@@ -162,6 +162,7 @@ const DashboardView = ({ insights }: { insights: Insights }) => {
                 <Tooltip
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length) {
+
                       return (
                         <div className="bg-background border rounded-lg p-2 shadow-md">
                           <p className="font-medium">{label}</p>
@@ -184,45 +185,45 @@ const DashboardView = ({ insights }: { insights: Insights }) => {
           </div>
         </CardContent>
       </Card>
-     <div className="grid  grid-cols-1 md:grid-cols-2  gap-4">
-       {/* key industry trends */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Key Industry Trends</CardTitle>
-          <CardDescription>
-            Insights into the latest trends shaping the industry landscape.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className=" space-y-4">
-            {insights.keyTrends.map((trend: string, index: number) => (
-              <li key={index} className="flex items-start space-x-2">
-               <div className="h-2 w-2 mt-2 rounded-full bg-primary"></div>
-               <span>{trend}</span>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
-      {/* recommended skills */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recommended Skills</CardTitle>
-          <CardDescription>
-            Skills that are in high demand for the selected role.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {insights.recommendedSkills.map((skill: string) => (
-              <Badge key={skill} variant="outline">
-                {skill}
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-     </div>
+      <div className="grid  grid-cols-1 md:grid-cols-2  gap-4">
+        {/* key industry trends */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Key Industry Trends</CardTitle>
+            <CardDescription>
+              Insights into the latest trends shaping the industry landscape.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className=" space-y-4">
+              {insights.keyTrends.map((trend: string, index: number) => (
+                <li key={index} className="flex items-start space-x-2">
+                  <div className="h-2 w-2 mt-2 rounded-full bg-primary"></div>
+                  <span>{trend}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+        {/* recommended skills */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Recommended Skills</CardTitle>
+            <CardDescription>
+              Skills that are in high demand for the selected role.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {insights.recommendedSkills.map((skill: string) => (
+                <Badge key={skill} variant="outline">
+                  {skill}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
