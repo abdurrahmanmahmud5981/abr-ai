@@ -5,17 +5,36 @@ import React from 'react'
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis, } from 'recharts';
-const DashboardView = ({ insights }) => {
-  const salaryData = insights.salaryRange.map((item) => ({
-    name: item.role,
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, } from 'recharts';
+interface SalaryRangeItem {
+  name: string;
+  min: number;
+  max: number;
+  median: number;
+}
+
+interface Insights {
+  salaryRange: SalaryRangeItem[];
+  marketOutlook: string;
+  lastUpdated: string | Date;
+  nextUpdate: string | Date;
+  growthRate: number;
+  demandLevel: string;
+  topSkills: string[];
+  keyTrends: string[];
+  recommendedSkills: string[];
+}
+
+const DashboardView = ({ insights }: { insights: Insights }) => {
+  const salaryData = insights.salaryRange.map((item: { name: string; min: number; max: number; median: number; }) => ({
+    name: item.name,
     min: item.min / 1000, // Convert to thousands
     max: item.max / 1000, // Convert to thousands
     median: item.median / 1000, // Convert to thousands
   }));
   console.log('salaryData', salaryData)
 
-  const getDemandLevelColor = (level) => {
+  const getDemandLevelColor = (level: string) => {
     switch (level.toLowerCase()) {
       case 'high':
         return 'bg-green-500';
@@ -28,7 +47,7 @@ const DashboardView = ({ insights }) => {
     }
   }
 
-  const getMarketOutLookInfo = (outlook) => {
+  const getMarketOutLookInfo = (outlook: string) => {
     switch (outlook.toLowerCase()) {
       case 'positive':
         return { color: 'text-green-500', icon: TrendingUpIcon };
@@ -176,7 +195,7 @@ const DashboardView = ({ insights }) => {
         </CardHeader>
         <CardContent>
           <ul className=" space-y-4">
-            {insights.keyTrends.map((trend, index) => (
+            {insights.keyTrends.map((trend: string, index: number) => (
               <li key={index} className="flex items-start space-x-2">
                <div className="h-2 w-2 mt-2 rounded-full bg-primary"></div>
                <span>{trend}</span>
@@ -185,7 +204,24 @@ const DashboardView = ({ insights }) => {
           </ul>
         </CardContent>
       </Card>
-    
+      {/* recommended skills */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recommended Skills</CardTitle>
+          <CardDescription>
+            Skills that are in high demand for the selected role.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {insights.recommendedSkills.map((skill: string) => (
+              <Badge key={skill} variant="outline">
+                {skill}
+              </Badge>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
      </div>
     </div>
   )
