@@ -29,12 +29,14 @@ import { updateUser } from "@/actions/user";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
-const OnboardingForm: React.FC = ({
+interface OnboardingFormProps {
+  industries: { id: string; name: string; subIndustries: string[] }[];
+}
+
+const OnboardingForm: React.FC<OnboardingFormProps> = ({
   industries,
-}: {
-  industries: string | number[];
 }) => {
-  const [selectedIndustry, setSelectedIndustry] = React.useState(null);
+  const [selectedIndustry, setSelectedIndustry] = React.useState<{ id: string; name: string; subIndustries: string[] } | undefined>(undefined);
 
   const router = useRouter();
 
@@ -56,7 +58,7 @@ const OnboardingForm: React.FC = ({
 
   const watchIndustry = watch("industry");
 
-  const submitForm = async (values) => {
+  const submitForm = async (values: any) => {
     console.log("Form submitted", values);
     try {
       const formattedIndustry = `${values.industry}-${values.subIndustry.toLowerCase().replace(/ /g, "-")}`
