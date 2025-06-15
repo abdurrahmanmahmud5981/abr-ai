@@ -10,7 +10,7 @@ if (!geminiApiKey) {
 const genAI = new GoogleGenerativeAI(geminiApiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-export async function generateAIInsight(industry) {
+export async function generateAIInsight(industry: string) {
       const prompt = `
           Analyze the current state of the ${industry} industry and provide insights in ONLY the following JSON format without any additional notes or explanations:
           {
@@ -53,6 +53,9 @@ export async function getIndustryInsights() {
     if (!user) throw new Error("User not found");
 
   if (!user.industryInsight) {
+        if (!user.industry) {
+            throw new Error("User industry is not set");
+        }
         const insights = await generateAIInsight(user.industry);
         const industryInsight = await db.industryInsight.create({
             data: {
