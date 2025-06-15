@@ -2,8 +2,17 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { db } from "../prisma";
 import { inngest } from "./client";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+const geminiApiKey = process.env.GEMINI_API_KEY;
+if (!geminiApiKey) {
+  throw new Error("GEMINI_API_KEY environment variable is not set.");
+}
+const genAI = new GoogleGenerativeAI(geminiApiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+
+
+
 export const generateIndustryInsights = inngest.createFunction(
   { id: "generate-industry-insights", name: "generate-industry-insights" },
   {cron: "0 0 * * *"}, // Runs daily at midnight
@@ -46,6 +55,8 @@ export const generateIndustryInsights = inngest.createFunction(
         const text = part && 'text' in part ? part.text : "";
         const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
         const insights = JSON.parse(cleanedText);
+
+        // update in the database 
         await step.run(`Update ${industry} Insights`, async ()=>{
          await db.industryInsight.update({
             where: { industry },
