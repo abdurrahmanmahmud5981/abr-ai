@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import useFetch from '@/hooks/use-fetch';
 import React, { useEffect, useState } from 'react'
 import { BarLoader } from 'react-spinners';
+import { toast } from 'sonner';
 
 const Quiz = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -54,8 +55,25 @@ const Quiz = () => {
         }
     }
 
+    const calculateScore = ()=>{
+        let correct = 0;
+        answers.forEach((answer,ind)=>{
+            if(answer === quizData[ind].correctAnswer){
+                correct++;
+            }
+        })
+        return (correct / quizData.length) * 100;
+    }
 
-    const finishQuiz = ()=>{}
+    const finishQuiz = async ()=>{
+        const score:number = calculateScore();
+        try {
+            await saveQuizResultFn(quizData,answers,score);
+            toast.success("Quiz Completed")
+        } catch (error:unknown) {
+            toast.error(error.message || "Failed to save quiz results")
+        }
+    }
 
 
     //loading
