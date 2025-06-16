@@ -1,5 +1,5 @@
 "use client"
-import { generateQuiz } from '@/actions/interview';
+import { generateQuiz, saveQuizResult } from '@/actions/interview';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -20,11 +20,42 @@ const Quiz = () => {
         data: quizData,
     } = useFetch(generateQuiz)
 
+
+    const {
+        loading:savingResult,
+        fn:saveQuizResultFn,
+        data:resultData,
+        setData:setResultData,
+    } = useFetch(saveQuizResult)
+
+
     useEffect(() => {
         if (quizData) {
             setAnswers(new Array(quizData.length).fill(null))
         }
     }, [quizData])
+
+
+
+    const handleAnswer = (answer: string) => {
+        const newAnswers = [...answers]
+        newAnswers[currentQuestion] = answer;
+        setAnswers(newAnswers)
+    }
+
+
+
+    const handleNext = ()=>{
+        if(currentQuestion<quizData.length - 1){
+            setCurrentQuestion(currentQuestion+1)
+            setShowExplanation(false)
+        }else{
+            finishQuiz()
+        }
+    }
+
+
+    const finishQuiz = ()=>{}
 
 
     //loading
@@ -52,6 +83,8 @@ const Quiz = () => {
 
 
     const question = quizData[currentQuestion];
+
+
     return (
         <Card className='mx-2'>
             <CardHeader>
@@ -65,7 +98,10 @@ const Quiz = () => {
                     {question.question}
                 </p>
 
-                <RadioGroup className='space-y-2'>
+                <RadioGroup
+                    onValueChange={handleAnswer}
+                    value={answers[currentQuestion]}
+                    className='space-y-2'>
                     {
                         question.options.map((option, ind) => (
                             <div key={ind} className="flex items-center space-x-2">
@@ -76,9 +112,32 @@ const Quiz = () => {
                     }
 
                 </RadioGroup>
+                {
+                    showExplanation && (<div className='mt-4 p-4 bg-muted rounded-lg'>
+                        <p className='font-medium'>Explanation:</p>
+                        <p className='text-muted-foreground'>{question.explanation}</p>
+                    </div>)
+                }
             </CardContent>
             <CardFooter>
-                
+                {
+                    !showExplanation && <Button variant={"outline"} onClick={() => setShowExplanation(true)}
+                        disabled={!answers[currentQuestion]}
+                    >
+                        Show Explanation
+                    </Button>
+                }
+
+
+                <Button className='ml-auto' onClick={handleNext}
+                    disabled={!answers[currentQuestion]}
+                >
+                    {
+                        currentQuestion < quizData.length - 1 
+                        ? "Next Question" 
+                        : "Finish Quiz"
+                    }
+                </Button>
             </CardFooter>
         </Card>
     )
