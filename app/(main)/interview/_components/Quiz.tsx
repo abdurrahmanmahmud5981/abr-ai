@@ -28,7 +28,7 @@ const Quiz = () => {
         data:resultData,
         setData:setResultData,
     } = useFetch(saveQuizResult)
-
+    console.log(resultData)
 
     useEffect(() => {
         if (quizData) {
@@ -148,8 +148,13 @@ const Quiz = () => {
 
 
                 <Button className='ml-auto' onClick={handleNext}
-                    disabled={!answers[currentQuestion]}
+                    disabled={!answers[currentQuestion] || savingResult}
                 >
+                    {
+                        savingResult && (
+                            <BarLoader className='mt-4' width={"100%"}  color='gray'/>
+                        )
+                    }
                     {
                         currentQuestion < quizData.length - 1 
                         ? "Next Question" 
