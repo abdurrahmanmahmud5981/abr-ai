@@ -5,9 +5,11 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import useFetch from '@/hooks/use-fetch';
+import { Loader2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { BarLoader } from 'react-spinners';
 import { toast } from 'sonner';
+import QuizResult from './quiz-result';
 
 const Quiz = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -28,7 +30,7 @@ const Quiz = () => {
         data:resultData,
         setData:setResultData,
     } = useFetch(saveQuizResult)
-    console.log(resultData)
+  
 
     useEffect(() => {
         if (quizData) {
@@ -76,10 +78,30 @@ const Quiz = () => {
     }
 
 
+    const startNewQuiz=()=>{
+        setCurrentQuestion(0);
+        setAnswers([])
+        setShowExplanation(false)
+        generateQuizFn()
+        setResultData(null)
+    }
+
     //loading
     if (generatingQuiz) {
         return <BarLoader className='mt-4' width="100%" color='gray' />
     }
+
+
+
+    // show results if quiz is completed
+    if (resultData) {
+    return (
+      <div className="mx-2">
+        <QuizResult result={resultData} onStartNew={startNewQuiz} />
+      </div>
+    );
+  }
+
 
     if (!quizData) {
         return (
@@ -152,7 +174,7 @@ const Quiz = () => {
                 >
                     {
                         savingResult && (
-                            <BarLoader className='mt-4' width={"100%"}  color='gray'/>
+                            <Loader2 className='mt-4 h-4 w-4 animate-spin'/>
                         )
                     }
                     {
