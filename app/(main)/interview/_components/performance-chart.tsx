@@ -40,8 +40,15 @@ const PerformanceChart = ({ assessments }) => {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
               <YAxis domain={[0,100]} />
-              <Tooltip />
-              <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
+              <Tooltip  content={({active,payload})=>{
+                if(active && payload?.length){
+                  return (<div className='bg-background border rounded-lg p-2 shadow-md'>
+                    <p className='text-sm font-medium'>Score: {payload[0].value}%</p>
+                    <p className='text-xs text-muted-foreground'>{payload[0].payload.date}</p>
+                  </div>)
+                }
+              }}/>
+              <Line type="monotone" dataKey="score" stroke="hsl(var(--primary))" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
         </div>
