@@ -57,5 +57,5 @@ export const resumeSchema = z.object({
     skills:z.string().min(1,"Skills are required"),
     experience:z.array(entrySchema),
     education:z.array(entrySchema),
-    project:z.string(entrySchema),
+    projects:z.array(entrySchema),
 })

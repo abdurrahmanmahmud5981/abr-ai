@@ -12,7 +12,7 @@ if (!geminiApiKey) {
 const genAI = new GoogleGenerativeAI(geminiApiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-export async function seveResume(content) {
+export async function saveResume(content) {
     const { userId } = await auth()
 
     if (!userId) throw new Error("unauthorized");
@@ -109,6 +109,6 @@ export async function improveWithAI({current,type}) {
   } catch (error) {
     console.error("Error improving content:",error)
     throw new Error("Failed to improve content")
-    
+
   }
 }

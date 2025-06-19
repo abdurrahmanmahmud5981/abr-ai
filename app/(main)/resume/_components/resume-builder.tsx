@@ -1,11 +1,50 @@
 "use client"
+import { saveResume } from '@/actions/resume.'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import useFetch from '@/hooks/use-fetch'
+import { resumeSchema } from '@/lib/schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Download, Save } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 const ResumeBuilder = ({initialContent}) => {
-    const [activeTav, setActiveTav] = useState("edit")
+    const [activeTav, setActiveTav] = useState("edit");
+    
+
+    // resume form
+    const {control,register,handleSubmit,watch,formState:{errors}} = useForm({
+        resolver:zodResolver(resumeSchema),
+        defaultValues:{
+            contactInfo:{},
+            summary:"",
+            skills:"",
+            experience:[],
+            education:[],
+            projects:[]
+        }
+    });
+
+
+    // api call
+    const {
+        loading:isSaving,
+        fn:saveResumeFn,
+        data:saveResult,
+        error:saveError,
+    } = useFetch(saveResume)
+
+
+
+    const formValues = watch()
+
+
+    // if resume is already 
+    useEffect(()=>{
+        if(initialContent)setActiveTav("preview");
+    },[initialContent])
+
   return (
     <div className='space-y-4'>
      <div className="flex flex-col md:flex-row justify-between items-center gap-2">
