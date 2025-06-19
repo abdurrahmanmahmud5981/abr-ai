@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import { BarLoader } from 'react-spinners'
-const InterviewLayout = ({ children }:{
+const ResumeLayout = ({ children }:{
     children:React.ReactNode
 }) => {
     return (
@@ -15,4 +15,4 @@ const InterviewLayout = ({ children }:{
     )
 }
 
-export default InterviewLayout;
+export default ResumeLayout;
