@@ -77,11 +77,10 @@ export async function getUserOnboardingStatus() {
         }
     })
 
-    if (!user) {
-        throw new Error("User not found");
+    if (!user) throw new Error("User not found");
         // Redirect to onboarding if user not found (handle this in the client)
         
-    }
+ 
 
     try {
         const user = await db.user.findUnique({
