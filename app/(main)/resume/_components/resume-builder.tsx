@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Download, Save } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import EntryForm from './enry-form'
 
 const ResumeBuilder = ({ initialContent }) => {
     const [activeTav, setActiveTav] = useState("edit");
@@ -48,7 +49,7 @@ const ResumeBuilder = ({ initialContent }) => {
     }, [initialContent])
 
 
-    const onSubmitForm = async(data)=>{}
+    const onSubmitForm = async (data) => { }
 
 
     return (
@@ -167,7 +168,7 @@ const ResumeBuilder = ({ initialContent }) => {
                         {/* skills */}
                         <div className="space-y-4">
                             <h3 className='text-lg font-medium'>
-                               Skills
+                                Skills
                             </h3>
                             <Controller
                                 name='skills'
@@ -183,14 +184,21 @@ const ResumeBuilder = ({ initialContent }) => {
                         </div>
 
                         {/* Experience  */}
-                         <div className="space-y-4">
+                        <div className="space-y-4">
                             <h3 className='text-lg font-medium'>
                                 Work Experience
                             </h3>
                             <Controller
                                 name='experience'
                                 control={control}
-                                render={({ field }) => (<></>)}
+                                render={({ field }) =>
+                                (
+                                    <EntryForm
+                                        type='Experience'
+                                        entries={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
                             />
                             {errors.experience && (
                                 <p className='text-sm text-red-500'>{errors.experience.message}</p>
@@ -198,14 +206,20 @@ const ResumeBuilder = ({ initialContent }) => {
                         </div>
 
                         {/* education */}
-                          <div className="space-y-4">
+                        <div className="space-y-4">
                             <h3 className='text-lg font-medium'>
                                 Education
                             </h3>
                             <Controller
                                 name='education'
                                 control={control}
-                                render={({ field }) => (<></>)}
+                                render={({ field }) => (
+                                    <EntryForm
+                                        type='Education'
+                                        entries={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
                             />
                             {errors.education && (
                                 <p className='text-sm text-red-500'>{errors.education.message}</p>
@@ -213,14 +227,20 @@ const ResumeBuilder = ({ initialContent }) => {
                         </div>
 
                         {/* projects */}
-                          <div className="space-y-4">
+                        <div className="space-y-4">
                             <h3 className='text-lg font-medium'>
                                 Projects
                             </h3>
                             <Controller
                                 name='projects'
                                 control={control}
-                                render={({ field }) => (<></>)}
+                                render={({ field }) => (
+                                    <EntryForm
+                                        type='Project'
+                                        entries={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
                             />
                             {errors.projects && (
                                 <p className='text-sm text-red-500'>{errors.projects.message}</p>
