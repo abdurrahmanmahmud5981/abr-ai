@@ -56,11 +56,8 @@ const QuizList = ({assessments}) => {
       <DialogContent className='max-w-3xl max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>
-        
           </DialogTitle>
-         
         </DialogHeader>
-
         <QuizResult result={selectedQuiz} onStartNew={()=>router.push("/interview/mock")} hideStartNew/>
       </DialogContent>
     </Dialog>
