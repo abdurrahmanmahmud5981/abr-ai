@@ -1,14 +1,17 @@
 "use client";
+import { improveWithAI } from '@/actions/resume.';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import useFetch from '@/hooks/use-fetch';
 import { entrySchema } from '@/lib/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { set } from 'date-fns';
-import { PlusCircle } from 'lucide-react';
+import { Loader2, PlusCircle, Sparkles } from 'lucide-react';
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 interface EntryFormProps {
     type: string;
@@ -39,6 +42,30 @@ const EntryForm = ({ type, entries, onChange }: EntryFormProps) => {
     })
 
     const current = watch("current");
+
+    const {
+        loading:isImproving,
+        fn:improveWithAIFn,
+        data:improvedContent,
+        error:improveError,
+    } = useFetch(improveWithAI)
+
+    const handleAdd = ()=>{}
+
+    const handleDelete = ()=>{}
+
+    const handleImproveDescription = async ()=>{
+     const description = watch("description");
+     if(!description){
+        toast.error("Please enter a description first");
+        return;
+      } 
+
+      await improveWithAIFn({
+            current:description,
+            type:type.toLowerCase(),//'experience',
+      })
+    }
 
     return (
         <div>
@@ -151,6 +178,30 @@ const EntryForm = ({ type, entries, onChange }: EntryFormProps) => {
                                     )
                                 }
                             </div>
+                            <Button 
+                            type='button'
+                            variant={"ghost"}
+                            size={"sm"}
+                            onClick={handleImproveDescription}
+                            disabled={isImproving || !watch("description")}
+                            >
+
+                                {
+                                    isImproving ?
+                                     (<>
+                                     <Loader2 className='h-4 w-4 animate-spin mr-2'/>
+                                     Improving...
+                                     </>)
+                                     :
+                                    (
+                                        <>
+                                        <Sparkles className='w-4 h-4 mr-2'/>
+                                        Improve with AI
+                                        </>
+                                    )
+                                }
+
+                            </Button>
                         </CardContent>
                     </Card>
                 )
