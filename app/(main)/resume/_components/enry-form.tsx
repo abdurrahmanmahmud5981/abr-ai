@@ -9,7 +9,7 @@ import { entrySchema } from '@/lib/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { set } from 'date-fns';
 import { Loader2, PlusCircle, Sparkles } from 'lucide-react';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -53,6 +53,18 @@ const EntryForm = ({ type, entries, onChange }: EntryFormProps) => {
     const handleAdd = ()=>{}
 
     const handleDelete = ()=>{}
+
+
+    useEffect(()=>{
+        if(improvedContent && !isImproving){
+            setValue("description", improvedContent);
+            toast.success("Description improved successfully!");
+        }
+        if(improveError){
+            toast.error(improveError?.message || "Failed to improve description. Please try again.");
+        }
+    },[improvedContent,improveError,isImproving])
+
 
     const handleImproveDescription = async ()=>{
      const description = watch("description");
