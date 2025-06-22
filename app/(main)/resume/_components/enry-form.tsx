@@ -9,14 +9,23 @@ import { entrySchema } from '@/lib/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { set } from 'date-fns';
 import { Loader2, PlusCircle, Sparkles } from 'lucide-react';
+import { parse, format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+
 
 interface EntryFormProps {
     type: string;
     entries: any[];
     onChange: (entries: any[]) => void;
+}
+
+// 
+const formateDisplayDate = (dateString:string)=>{
+    if(!dateString) return "";
+    const date = parse(dateString,"yyyy-MM",new Date());
+    return format(date,"MMM yyyy")
 }
 
 const EntryForm = ({ type, entries, onChange }: EntryFormProps) => {
@@ -50,7 +59,18 @@ const EntryForm = ({ type, entries, onChange }: EntryFormProps) => {
         error: improveError,
     } = useFetch(improveWithAI)
 
-    const handleAdd = () => { }
+    const handleAdd = handleValidation((data) => {
+
+        const formattedEntry = {
+            ...data,
+            startDate: formateDisplayDate(data.startDate ?? ""),
+            endDate: data.current ? "" : formateDisplayDate(data.endDate ?? ""),
+        }
+
+        onChange([...entries,formattedEntry]);
+        reset();
+        setIsAdding(false)
+     })
 
     const handleDelete = () => { }
 
@@ -215,7 +235,7 @@ const EntryForm = ({ type, entries, onChange }: EntryFormProps) => {
 
                             </Button>
                         </CardContent>
-                        <CardFooter>
+                        <CardFooter className='flex justify-end space-x-2'>
                             <Button
                                 type='button'
                                 variant={"outline"}
