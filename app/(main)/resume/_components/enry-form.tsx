@@ -8,7 +8,7 @@ import useFetch from '@/hooks/use-fetch';
 import { entrySchema } from '@/lib/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { set } from 'date-fns';
-import { Loader2, PlusCircle, Sparkles } from 'lucide-react';
+import { Loader2, PlusCircle, Sparkles, X } from 'lucide-react';
 import { parse, format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
@@ -22,10 +22,10 @@ interface EntryFormProps {
 }
 
 // 
-const formateDisplayDate = (dateString:string)=>{
-    if(!dateString) return "";
-    const date = parse(dateString,"yyyy-MM",new Date());
-    return format(date,"MMM yyyy")
+const formateDisplayDate = (dateString: string) => {
+    if (!dateString) return "";
+    const date = parse(dateString, "yyyy-MM", new Date());
+    return format(date, "MMM yyyy")
 }
 
 const EntryForm = ({ type, entries, onChange }: EntryFormProps) => {
@@ -67,12 +67,15 @@ const EntryForm = ({ type, entries, onChange }: EntryFormProps) => {
             endDate: data.current ? "" : formateDisplayDate(data.endDate ?? ""),
         }
 
-        onChange([...entries,formattedEntry]);
+        onChange([...entries, formattedEntry]);
         reset();
         setIsAdding(false)
-     })
+    })
 
-    const handleDelete = () => { }
+    const handleDelete = (ind: number) => {
+        const newEntries = entries.filter((_,i)=> i !== ind);
+        onChange(newEntries)
+     }
 
 
     useEffect(() => {
@@ -100,7 +103,38 @@ const EntryForm = ({ type, entries, onChange }: EntryFormProps) => {
     }
 
     return (
-        <div>
+        <div className='space-y-4'>
+
+            <div className="space-y-4">
+                {
+                    entries.map((item, ind) => (
+                        <Card key={ind}>
+                            <CardHeader>
+                                <CardTitle className='text-sm font-medium'>
+                                    {item.title} @ {item.organization}
+                                </CardTitle>
+                                <Button variant={"outline"} size={"icon"} type='button'
+                                    onClick={() => handleDelete(ind)}
+                                ><X className='h-4 w-4' /></Button>
+                            </CardHeader>
+                            <CardContent>
+                                <p className='text-sm text-muted-foreground'
+                                >
+                                    {
+                                        item.current ?
+                                            `${item.startDate} - Present`
+                                            :
+                                            `${item.startDate} - ${item.endDate}`
+                                    }
+                                </p>
+                                <p className='mt-2 text-sm whitespace-pre-wrap'>
+                                    {item.description}
+                                </p>
+                            </CardContent>
+                        </Card>
+                    ))
+                }
+            </div>
             {
                 isAdding && (
                     <Card>
