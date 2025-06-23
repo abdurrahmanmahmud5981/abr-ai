@@ -7,13 +7,14 @@ import { Textarea } from '@/components/ui/textarea'
 import useFetch from '@/hooks/use-fetch'
 import { resumeSchema } from '@/lib/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Download, Save } from 'lucide-react'
+import { Download, Edit, Monitor, Save } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import EntryForm from './enry-form'
 
 const ResumeBuilder = ({ initialContent }) => {
     const [activeTav, setActiveTav] = useState("edit");
+    const [resumeMode, setResumeMode] = useState("preview");
     const {
         loading: isSaving,
         fn: saveResumeFn,
@@ -248,7 +249,21 @@ const ResumeBuilder = ({ initialContent }) => {
                         </div>
                     </form>
                 </TabsContent>
-                <TabsContent value='preview'>Preview Edit</TabsContent>
+                <TabsContent value='preview'>
+                    <Button variant={"link"} type='button' className='mb-2'
+                    onClick={()=> setResumeMode(resumeMode === "preview" ? "edit" : "preview")}
+                    >
+                       {resumeMode === "preview" ? 
+                       (<>
+                        <Edit className='h-4 w-4'/>
+                        Edit Resume
+                       </>) : (<>
+                        <Monitor className='h-4 w-4'/>
+                        Show Preview
+                       </>)
+                    }
+                    </Button>
+                </TabsContent>
             </Tabs>
         </div>
     )

@@ -109,7 +109,8 @@ const EntryForm = ({ type, entries, onChange }: EntryFormProps) => {
                 {
                     entries.map((item, ind) => (
                         <Card key={ind}>
-                            <CardHeader>
+                            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2
+                            '>
                                 <CardTitle className='text-sm font-medium'>
                                     {item.title} @ {item.organization}
                                 </CardTitle>
