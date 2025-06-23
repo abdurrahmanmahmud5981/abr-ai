@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import useFetch from '@/hooks/use-fetch'
 import { resumeSchema } from '@/lib/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Download, Edit, Monitor, Save } from 'lucide-react'
+import { AlertTriangle, Download, Edit, Monitor, Save } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import EntryForm from './enry-form'
@@ -263,6 +263,17 @@ const ResumeBuilder = ({ initialContent }) => {
                        </>)
                     }
                     </Button>
+
+
+                    {resumeMode !== "preview" 
+                    && (
+                    <div className='flex p-3 gap-2 border-2 border-yellow-600 text-yellow-600 rounded mb-2'>
+                        <AlertTriangle className='h-5 w-5'/>
+                        <span className='text-sm'>
+                            You will lose editied markdown if you update the form data. 
+                        </span>
+                    </div>)
+                    }
                 </TabsContent>
             </Tabs>
         </div>
