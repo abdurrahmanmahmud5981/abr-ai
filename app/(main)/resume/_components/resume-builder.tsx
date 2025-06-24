@@ -15,6 +15,9 @@ import EntryForm from './enry-form'
 const ResumeBuilder = ({ initialContent }) => {
     const [activeTav, setActiveTav] = useState("edit");
     const [resumeMode, setResumeMode] = useState("preview");
+    const [previewContent, setPreviewContent] = useState(initialContent);
+
+
     const {
         loading: isSaving,
         fn: saveResumeFn,
@@ -48,6 +51,15 @@ const ResumeBuilder = ({ initialContent }) => {
     useEffect(() => {
         if (initialContent) setActiveTav("preview");
     }, [initialContent])
+
+
+    const getCombinedContent = ()=>{
+        const {summary,skills,experience,education,} = formValues;
+
+        return [
+            
+        ]
+    }
 
 
     const onSubmitForm = async (data) => { }
@@ -274,6 +286,8 @@ const ResumeBuilder = ({ initialContent }) => {
                         </span>
                     </div>)
                     }
+
+
                 </TabsContent>
             </Tabs>
         </div>
