@@ -3,12 +3,12 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { faqs } from "@/data/faqs";
-import { features } from "@/data/features";
 import { howItWorks } from "@/data/howItWorks";
 import { testimonial } from "@/data/testimonial";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import PowerfulFeatures from "./_components/powerful-features";
 
 export default function Home() {
   return (
@@ -16,26 +16,7 @@ export default function Home() {
       <div className="grid-background"></div>
       <HeroSection />
       {/* features */}
-      <section className="w-full py-12  md:py-24 lg:py-32 bg-background">
-        <div className="container mx-auto px-4 md:px-6">
-          <h2 className="text-3xl font-bold tracking-tighter text-center mb-12">Powerful Features for Your Career Growth </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {
-              features.map((feature, index) => (
-                <Card key={index} className="border-2 hover:border-primary transition-colors duration-300 ease-in-out">
-                  <CardContent className="flex flex-col items-center text-center pt-6">
-                    <div className="flex flex-col items-center justify-center ">
-                      <feature.icon className="feature-icon h-10 w-10" />
-                      <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                      <p className="text-muted-foreground">{feature.description}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            }
-          </div>
-        </div>
-      </section>
+     <PowerfulFeatures/>
       {/* statistics */}
       <section className="w-full py-12  md:py-24 bg-muted/50">
         <div className="container mx-auto px-4 md:px-6">
