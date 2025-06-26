@@ -11,11 +11,15 @@ import { AlertTriangle, Download, Edit, Monitor, Save } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import EntryForm from './enry-form'
+import { entriesToMarkdown } from '@/lib/helper'
+import { useUser } from '@clerk/nextjs'
+import MDEditor from '@uiw/react-md-editor'
 
 const ResumeBuilder = ({ initialContent }) => {
-    const [activeTav, setActiveTav] = useState("edit");
+    const [activeTab, setActiveTab] = useState("edit");
     const [resumeMode, setResumeMode] = useState("preview");
     const [previewContent, setPreviewContent] = useState(initialContent);
+    const {user}  = useUser()
 
 
     const {
@@ -49,16 +53,47 @@ const ResumeBuilder = ({ initialContent }) => {
 
     // if resume is already 
     useEffect(() => {
-        if (initialContent) setActiveTav("preview");
+        if (initialContent) setActiveTab("preview");
     }, [initialContent])
 
 
-    const getCombinedContent = ()=>{
-        const {summary,skills,experience,education,} = formValues;
+
+    useEffect(()=>{
+        if(activeTab === "edit"){
+            const newContent = getCombinedContent();
+            setPreviewContent(newContent ? newContent : initialContent);
+        }
+    },[formValues,activeTab])
+
+
+    const getContactMarkdown = ()=>{
+        const {contactInfo} = formValues;
+         const parts = [];
+    if (contactInfo.email) parts.push(`📧 ${contactInfo.email}`);
+    if (contactInfo.mobile) parts.push(`📱 ${contactInfo.mobile}`);
+    if (contactInfo.linkedin)
+      parts.push(`💼 [LinkedIn](${contactInfo.linkedin})`);
+    if (contactInfo.twitter) parts.push(`🐦 [Twitter](${contactInfo.twitter})`);
+
+
+     return parts.length > 0
+      ? `## <div align="center">${user?.fullName}</div>
+        \n\n<div align="center">\n\n${parts.join(" | ")}\n\n</div>`
+      : "";
+    }
+
+    const getCombinedContent = () => {
+        const { summary, skills, experience, education, projects } = formValues;
 
         return [
-            
-        ]
+            getContactMarkdown(),
+            summary&& `## Professional Summary\n\n${summary}`,
+            skills && `## Skills\n\n${skills}`,
+            entriesToMarkdown(experience,"Work Experience"),
+            entriesToMarkdown(education, "Education"),
+            entriesToMarkdown(projects,"Projects")
+        ].filter(Boolean)
+        .join("\n\n")
     }
 
 
@@ -86,11 +121,12 @@ const ResumeBuilder = ({ initialContent }) => {
             </div>
 
 
-            <Tabs value={activeTav} onValueChange={setActiveTav}>
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList>
                     <TabsTrigger value='edit'>Form</TabsTrigger>
                     <TabsTrigger value='preview'>Markdown</TabsTrigger>
                 </TabsList>
+                {/*  */}
                 <TabsContent value='edit'>
                     <form className='space-y-8' onSubmit={handleSubmit(onSubmitForm)}>
                         <div className="space-y-4">
@@ -261,32 +297,40 @@ const ResumeBuilder = ({ initialContent }) => {
                         </div>
                     </form>
                 </TabsContent>
+                {/*  */}
                 <TabsContent value='preview'>
                     <Button variant={"link"} type='button' className='mb-2'
-                    onClick={()=> setResumeMode(resumeMode === "preview" ? "edit" : "preview")}
+                        onClick={() => setResumeMode(resumeMode === "preview" ? "edit" : "preview")}
                     >
-                       {resumeMode === "preview" ? 
-                       (<>
-                        <Edit className='h-4 w-4'/>
-                        Edit Resume
-                       </>) : (<>
-                        <Monitor className='h-4 w-4'/>
-                        Show Preview
-                       </>)
-                    }
+                        {resumeMode === "preview" ?
+                            (<>
+                                <Edit className='h-4 w-4' />
+                                Edit Resume
+                            </>) : (<>
+                                <Monitor className='h-4 w-4' />
+                                Show Preview
+                            </>)
+                        }
                     </Button>
 
 
-                    {resumeMode !== "preview" 
-                    && (
-                    <div className='flex p-3 gap-2 border-2 border-yellow-600 text-yellow-600 rounded mb-2'>
-                        <AlertTriangle className='h-5 w-5'/>
-                        <span className='text-sm'>
-                            You will lose editied markdown if you update the form data. 
-                        </span>
-                    </div>)
+                    {resumeMode !== "preview"
+                        && (
+                            <div className='flex p-3 gap-2 border-2 border-yellow-600 text-yellow-600 rounded mb-2'>
+                                <AlertTriangle className='h-5 w-5' />
+                                <span className='text-sm'>
+                                    You will lose editied markdown if you update the form data.
+                                </span>
+                            </div>)
                     }
 
+                    <div className="border rounded-lg">
+                        <MDEditor 
+                        value={previewContent} onChange={setPreviewContent}
+                        height={800}
+                        preview={resumeMode}
+                        />
+                    </div>
 
                 </TabsContent>
             </Tabs>
